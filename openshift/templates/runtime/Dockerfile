@@ -1,5 +1,6 @@
 # Use the offical nginx (based on debian)
-FROM nginx:mainline
+#FROM nginx:mainline
+FROM nginx-runtime:latest
 
 # Required for HTTP Basic feature
 RUN apt-get update && apt-get install openssl
@@ -12,6 +13,8 @@ LABEL io.openshift.s2i.scripts-url=image:///usr/libexec/s2i
 
 # Copy config from source to container
 COPY nginx.conf.template /tmp/
+
+USER root
 
 # Fix up permissions
 RUN chmod -R 0777 /tmp /var /run /etc /mnt /usr/libexec/s2i/

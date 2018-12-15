@@ -33,6 +33,12 @@ RUN yum -y install pango.x86_64 \
       && yum clean all -y && \
 # yum cache files may still exist (and quite large in size)
       rm -rf /var/cache/yum/*
+	  
 
+# Required in order to mount .npm as a volume to cache downloaded files
+RUN mkdir .npm && \
+  chown -R 1001:0 .npm && \
+  chmod -R ug+rwx .npm
+	  
 # Run container by default as user with id 1001 (default)
 USER 1001
