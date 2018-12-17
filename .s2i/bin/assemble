@@ -73,12 +73,10 @@ if [ "$SONAR_TOKEN" ]; then
   sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
 fi
 
-pwd
-
-ls -l
-
 echo "---> Removing node modules from image"
 rm -rf ./node_modules
 
 # Fix source directory permissions
 fix-permissions ./
+
+echo "---> Done assemble"
