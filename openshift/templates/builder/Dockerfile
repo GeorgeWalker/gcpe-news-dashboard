@@ -36,9 +36,10 @@ RUN yum -y install pango.x86_64 \
 
 # update npm, and install some dependencies that are slow to install.	  
 RUN npm i npm@6.4.1 -g	&& \
+  npm i puppeteer@1.9.0 -g && \
+  npm i  node-sass@4.9.3 -g && \
   rm -R /opt/rh/rh-nodejs8/root/usr/lib/node_modules/npm && \
-  npm i puppeteer@1.9.0 -g &&
-  npm i  node-sass@4.9.3 -g
+  
 
 
 # Required in order to mount .npm as a volume to cache downloaded files
