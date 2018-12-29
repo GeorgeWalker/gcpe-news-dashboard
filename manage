@@ -150,7 +150,7 @@ build-web-dev() {
     -e "NG_BASE_HREF=${WEB_BASE_HREF}" \
     -e "NG_DEPLOY_URL=${WEB_DEPLOY_URL}" \
     -e "TOB_THEME=${TOB_THEME}" \
-    --volume "${COMPOSE_PROJECT_NAME}_tob-npm-cache:/opt/app-root/src/.npm" \
+    --volume "${COMPOSE_PROJECT_NAME}_npm-cache:/opt/app-root/src/.npm" \
     '../.' \
     'nodejs-build' \
     'angular-dev'
@@ -172,6 +172,7 @@ build-api() {
  
   ${S2I_EXE} build \
     -e "DOTNET_STARTUP_PROJECT=Gcpe.Hub.API" \
+	--volume "${COMPOSE_PROJECT_NAME}_dotnet-cache:/opt/app-root/app" \
     '../gcpe-hub-api/.' \
     "$BASE_IMAGE_NAME" \
     'hub-api'
