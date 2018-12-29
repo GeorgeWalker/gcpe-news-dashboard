@@ -45,17 +45,19 @@ if [ -n "$NPM_MIRROR" ]; then
 fi
 
 echo "---> Installing application dependencies"
-yarn install --ci
+
 
 # Set the CI_BUILD to false by default.
 CI_BUILD=${CI_BUILD:-false}
 
 if [ "$CI_BUILD" == "true" ]; then
   echo "---> Running Tests and building in production mode"
+  yarn install
   yarn ci
 else
   echo "---> Building in production mode"
-  yarn build
+  npm ci
+  npm build
 fi
 
 # Set the SNYK_TEST to false by default.
