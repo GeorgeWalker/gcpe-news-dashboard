@@ -45,7 +45,7 @@ if [ -n "$NPM_MIRROR" ]; then
 fi
 
 echo "---> Installing application dependencies"
-yarn install
+yarn install --ci
 
 # Set the CI_BUILD to false by default.
 CI_BUILD=${CI_BUILD:-false}
