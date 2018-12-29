@@ -34,10 +34,12 @@ RUN yum -y install pango.x86_64 \
 # yum cache files may still exist (and quite large in size)
       rm -rf /var/cache/yum/*
 
-# update npm	  
-RUN npm i npm@6.4.1 -g	
-RUN ls /opt/rh/rh-nodejs8/root/usr/lib/node_modules/npm  
-RUN rm -R /opt/rh/rh-nodejs8/root/usr/lib/node_modules/npm
+# update npm, and install some dependencies that are slow to install.	  
+RUN npm i npm@6.4.1 -g	&& \
+  rm -R /opt/rh/rh-nodejs8/root/usr/lib/node_modules/npm && \
+  npm i puppeteer@1.9.0 -g &&
+  npm i  node-sass@4.9.3 -g
+
 
 # Required in order to mount .npm as a volume to cache downloaded files
 RUN chown -R 1001:0 .npm && \
