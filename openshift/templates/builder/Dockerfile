@@ -41,7 +41,8 @@ RUN rm -R /opt/rh/rh-nodejs8/root/usr/lib/node_modules/npm
 
 # Required in order to mount .npm as a volume to cache downloaded files
 RUN chown -R 1001:0 .npm && \
-  chmod -R ug+rwx .npm
+  chmod -R ug+rwx .npm && \  
+  chown -R 1001:0 /opt/app-root/src/.config
 	  
 # Run container by default as user with id 1001 (default)
 USER 1001

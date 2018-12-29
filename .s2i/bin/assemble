@@ -57,7 +57,7 @@ if [ "$CI_BUILD" == "true" ]; then
 else
   echo "---> Building in production mode"
   npm ci
-  npm build
+  npm run-script build
 fi
 
 # Set the SNYK_TEST to false by default.
