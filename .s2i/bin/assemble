@@ -44,19 +44,20 @@ if [ -n "$NPM_MIRROR" ]; then
   npm config set registry $NPM_MIRROR
 fi
 
-echo "---> Installing application dependencies"
 
 
 # Set the CI_BUILD to false by default.
 CI_BUILD=${CI_BUILD:-false}
-
+echo "---> Installing application dependencies"
+  
 if [ "$CI_BUILD" == "true" ]; then
+  yarn install  
   echo "---> Running Tests and building in production mode"
-  yarn install
   yarn ci
-else
-  echo "---> Building in production mode"
+else  
+  # npm ci uses package.lock to fetch specific dependencies
   npm ci
+  echo "---> Building in production mode"  
   npm run-script build
 fi
 
@@ -75,8 +76,8 @@ if [ "$SONAR_TOKEN" ]; then
   sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
 fi
 
-echo "---> Removing node modules from image"
-rm -rf ./node_modules
+#echo "---> Removing node modules from image"
+#rm -rf ./node_modules
 
 # Fix source directory permissions
 fix-permissions ./
