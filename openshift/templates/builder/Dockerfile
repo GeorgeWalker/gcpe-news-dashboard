@@ -37,7 +37,6 @@ RUN yum -y install pango.x86_64 \
 # update npm, and install some dependencies that are slow to install.	  
 RUN npm i npm@6.4.1 -g	&& \       
   rm -R /opt/rh/rh-nodejs8/root/usr/lib/node_modules/npm 
-  
 
 
 # Required in order to mount .npm as a volume to cache downloaded files
@@ -46,7 +45,4 @@ RUN chown -R 1001:0 .npm && \
   chown -R 1001:0 /opt/app-root/src/.config
 	  
 # Run container by default as user with id 1001 (default)
-USER 1001
-
-RUN npm i puppeteer@1.9.0 && \
-  npm i  node-sass@4.9.3 
+USER 1001 
