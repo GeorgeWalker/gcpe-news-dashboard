@@ -44,4 +44,4 @@ RUN mkdir .npm && \
 # Run container by default as user with id 1001 (default)
 USER 1001
 # update npm	  
-RUN npm i npm -g
+RUN /opt/rh/rh-nodejs8/root/usr/bin/npm i npm -g
