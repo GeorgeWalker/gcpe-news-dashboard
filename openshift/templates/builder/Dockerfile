@@ -3,7 +3,7 @@ FROM centos/nodejs-8-centos7
 
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
-ENV PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+ENV PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:/opt/rh/rh-nodejs8/root/usr/bin/:$PATH"
 
 # Switch to root for package installs
 USER 0
@@ -34,6 +34,8 @@ RUN yum -y install pango.x86_64 \
 # yum cache files may still exist (and quite large in size)
       rm -rf /var/cache/yum/*
 
+# update npm	  
+RUN /opt/rh/rh-nodejs8/root/usr/bin/npm i npm -g	  
 
 
 # Required in order to mount .npm as a volume to cache downloaded files
@@ -43,5 +45,3 @@ RUN mkdir .npm && \
 	  
 # Run container by default as user with id 1001 (default)
 USER 1001
-# update npm	  
-RUN /opt/rh/rh-nodejs8/root/usr/bin/npm i npm -g
