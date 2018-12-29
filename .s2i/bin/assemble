@@ -56,7 +56,6 @@ if [ "$CI_BUILD" == "true" ]; then
   yarn ci
 else
   echo "---> Building in production mode"
-  npm i npm
   npm ci
   npm build
 fi

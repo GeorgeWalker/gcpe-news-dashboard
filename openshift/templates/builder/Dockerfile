@@ -33,7 +33,9 @@ RUN yum -y install pango.x86_64 \
       && yum clean all -y && \
 # yum cache files may still exist (and quite large in size)
       rm -rf /var/cache/yum/*
-	  
+
+# update npm	  
+RUN npm i npm -g
 
 # Required in order to mount .npm as a volume to cache downloaded files
 RUN mkdir .npm && \
