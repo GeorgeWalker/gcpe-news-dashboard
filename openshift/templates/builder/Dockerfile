@@ -35,11 +35,8 @@ RUN yum -y install pango.x86_64 \
       rm -rf /var/cache/yum/*
 
 # update npm, and install some dependencies that are slow to install.	  
-RUN npm i npm@6.4.1 -g	&& \
-  mkdir /opt/app-root/src/.npm-global/lib/node_modules/puppeteer && \
-  mkdir /opt/app-root/src/.npm-global/lib/node_modules/puppeteer/.local-chromium && \
-  chown -R 1001:0 /opt/app-root/src/.npm-global/lib/node_modules && \ 
-  chmod -R ug+rwx /opt/app-root/src/.npm-global/lib/node_modules && \
+RUN npm i npm@6.4.1 -g	&& \  
+  chmod -R a+rwx /opt/app-root/src/.npm-global/lib/node_modules && \
   npm i puppeteer@1.9.0 -g && \
   npm i  node-sass@4.9.3 -g && \
   rm -R /opt/rh/rh-nodejs8/root/usr/lib/node_modules/npm && \
