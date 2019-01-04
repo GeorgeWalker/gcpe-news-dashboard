@@ -1,7 +1,9 @@
 #!/bin/bash
 export MSYS_NO_PATHCONV=1
 export DOCKERHOST=${APPLICATION_URL-$(docker run --rm --net=host codenvy/che-ip)}
-set -e
+
+# disable exit on non zero
+set +e
 
 S2I_EXE=s2i
 if [ -z $(type -P "$S2I_EXE") ]; then
@@ -165,21 +167,23 @@ build-api() {
 
   BASE_IMAGE="registry.access.redhat.com/dotnet/dotnet-21-rhel7:latest"
   BASE_IMAGE_NAME="dotnet-21-rhel7:latest"
-  echo -e "\nBuilding API image from ${BASE_IMAGE_NAME}..."
   
   docker pull $BASE_IMAGE
   docker tag $BASE_IMAGE $BASE_IMAGE_NAME
- 
+  echo -e "\nBuilding API image from ${BASE_IMAGE_NAME}..."
+  
+  # temporarily change directory to the hub API project - as we don't want to use S2I scripts for the angular front end.
+  pushd ../gcpe-hub-api
   ${S2I_EXE} build \
-    -e "DOTNET_STARTUP_PROJECT=Gcpe.Hub.API" \
-	--volume "${COMPOSE_PROJECT_NAME}_dotnet-cache:/opt/app-root/app" \
-    '../gcpe-hub-api/.' \
+    -e "DOTNET_STARTUP_PROJECT=Gcpe.Hub.API/Gcpe.Hub.API.csproj" \
+    '.' \
     "$BASE_IMAGE_NAME" \
-    'hub-api'
+	'hub-api'
 	
 	duration=$SECONDS
 	echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds elapsed."	
-	
+  # change back to previous directory
+  popd
 }
 
 buildImages() {
@@ -217,7 +221,7 @@ configureEnvironment() {
   # gnd-api
   export APP_CONFIG=${APP_CONFIG:-}
   export APP_MODULE=tob_anchor.boot:init_app
-  export API_HTTP_PORT=${API_HTTP_PORT:-8081}
+  export API_HTTP_PORT=${API_HTTP_PORT:-8080}
   export DEBUG=${DEBUG}
   export OPTIMIZE_TABLE_ROW_COUNTS=${OPTIMIZE_TABLE_ROW_COUNTS-}
   export INDY_DISABLED=${INDY_DISABLED-}
@@ -228,12 +232,12 @@ configureEnvironment() {
   export APPLICATION_URL=${APPLICATION_URL-http://localhost:8080}
 
   # gnd-web
-  export TOB_THEME=${TOB_THEME:-bcgov}
+ 
   export WEB_HTTP_PORT=${WEB_HTTP_PORT:-8080}
   export WEB_BASE_HREF=${WEB_BASE_HREF:-/}
   export WEB_DEPLOY_URL=${WEB_DEPLOY_URL:-/}
-  export API_URL=${API_URL-http://gnd-api:8080/api/v2/}
-  export IpFilterRules='#allow all; deny all;'
+  export API_URL=${API_URL-http://hub-api:8080/api/}
+  export IpFilterRules='allow all;'
   export RealIpFrom='127.0.0.0/16'
   export HTTP_BASIC_USERNAME=${HTTP_BASIC_USERNAME:-}
   export HTTP_BASIC_PASSWORD=${HTTP_BASIC_PASSWORD:-}
@@ -299,7 +303,8 @@ case "${COMMAND}" in
 start|up)
   _startupParams=$(getStartupParams $@)
   configureEnvironment $@
-  docker-compose up -d ${_startupParams}
+  docker-compose up -d ${_startupParams}  
+  
   docker-compose logs -f
  ;;
 logs)
